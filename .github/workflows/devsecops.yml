@@ -86,10 +86,7 @@ jobs:
 
       - name: Build Docker images
         run: |
-          # Forzamos los tags para que Trivy sepa exactamente qué escanear
-          docker build -t users-service:latest ./backend/users-service
-          docker build -t academic-service:latest ./backend/academic-service
-          docker build -t api-gateway:latest ./backend/api-gateway
+          docker build --no-cache -t users-service:latest ./backend/users-service
 
       # 7. SCA – Trivy (Corrección de referencias de imagen)
       - name: Trivy scan users-service
