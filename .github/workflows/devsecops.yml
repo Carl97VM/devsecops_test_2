@@ -86,13 +86,16 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker compose -f backend/docker-compose.yml build
+          # Forzamos los tags para que Trivy sepa exactamente qué escanear
+          docker build -t users-service:latest ./backend/users-service
+          docker build -t academic-service:latest ./backend/academic-service
+          docker build -t api-gateway:latest ./backend/api-gateway
 
       # 7. SCA – Trivy (Corrección de referencias de imagen)
       - name: Trivy scan users-service
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'backend-users-service'
+          image-ref: 'users-service:latest' # Ahora el nombre coincide exactamente
           severity: 'HIGH,CRITICAL'
           exit-code: 1
           ignore-unfixed: true
@@ -100,7 +103,7 @@ jobs:
       - name: Trivy scan academic-service
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'backend-academic-service'
+          image-ref: 'academic-service:latest'
           severity: 'CRITICAL'
           exit-code: 1
           ignore-unfixed: true
@@ -108,7 +111,7 @@ jobs:
       - name: Trivy scan api-gateway
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'backend-api-gateway'
+          image-ref: 'api-gateway:latest'
           severity: 'CRITICAL'
           exit-code: 1
           ignore-unfixed: true
