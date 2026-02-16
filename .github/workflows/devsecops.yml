@@ -87,6 +87,8 @@ jobs:
       - name: Build Docker images
         run: |
           docker build --no-cache -t users-service:latest ./backend/users-service
+          docker build --no-cache -t academic-service:latest ./backend/academic-service
+          docker build --no-cache -t api-gateway:latest ./backend/api-gateway
 
       # 7. SCA – Trivy (Corrección de referencias de imagen)
       - name: Trivy scan users-service
