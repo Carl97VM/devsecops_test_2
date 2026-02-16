@@ -86,9 +86,11 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker build --no-cache -t users-service:latest ./backend/users-service
-          docker build --no-cache -t academic-service:latest ./backend/academic-service
-          docker build --no-cache -t api-gateway:latest ./backend/api-gateway
+          # Usamos --pull para bajar la imagen de Node 20 más reciente (sin CVEs de OS)
+          # Usamos --no-cache para ignorar cualquier capa de npm vieja
+          docker build --no-cache --pull -t users-service:latest ./backend/users-service
+          docker build --no-cache --pull -t academic-service:latest ./backend/academic-service
+          docker build --no-cache --pull -t api-gateway:latest ./backend/api-gateway
 
       # 7. SCA – Trivy (Corrección de referencias de imagen)
       - name: Trivy scan users-service
