@@ -127,7 +127,21 @@ jobs:
 
       - name: Smoke test API Gateway
         run: |
-          curl --fail http://localhost:3000/health || exit 1
+          echo "Esperando a que el API Gateway esté listo..."
+          # Reintento dinámico: máximo 12 intentos (60 segundos total)
+          for i in {1..12}; do
+            if curl -s --fail http://localhost:3000/health; then
+              echo "✅ API Gateway online!"
+              exit 0
+            fi
+            echo "Attempt $i: Gateway no disponible todavía, esperando 5s..."
+            sleep 5
+          done
+          
+          echo "❌ ERROR: El servicio no respondió tras 1 minuto."
+          echo "--- LOGS DE API GATEWAY ---"
+          docker logs api-gateway
+          exit 1
 
       - name: Shutdown services
         if: always()

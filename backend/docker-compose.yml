@@ -36,9 +36,16 @@ services:
     container_name: api-gateway
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
-      - users-service
-      - academic-service
+      users-service:
+        condition: service_started
+      academic-service:
+        condition: service_started
     networks:
       - backend-net
 
