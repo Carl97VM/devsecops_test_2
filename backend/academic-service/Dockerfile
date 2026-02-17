@@ -3,8 +3,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev --ignore-scripts && \
-    npm audit fix --force --omit=dev || true
+RUN npm ci --omit=dev --ignore-scripts
 
 COPY . .
 
