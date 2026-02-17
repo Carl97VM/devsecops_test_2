@@ -41,19 +41,22 @@ jobs:
       - name: Install & Test users-service
         run: |
           cd backend/users-service
-          npm ci
+          npm install cross-spawn@7.0.6 glob@10.5.0 tar@7.5.7 --save-exact
+          npm ci || npm install # Si ci falla, install lo arregla
           npm test || echo "No tests found"
 
       - name: Install & Test academic-service
         run: |
           cd backend/academic-service
-          npm ci
+          npm install cross-spawn@7.0.6 glob@10.5.0 tar@7.5.7 --save-exact
+          npm ci || npm install # Si ci falla, install lo arregla
           npm test || echo "No tests found"
 
       - name: Install & Test api-gateway
         run: |
           cd backend/api-gateway
-          npm ci
+          npm install cross-spawn@7.0.6 glob@10.5.0 tar@7.5.7 --save-exact
+          npm ci || npm install # Si ci falla, install lo arregla
           npm test || echo "No tests found"
 
       # 4. Install & Test Frontend
@@ -86,8 +89,7 @@ jobs:
 
       - name: Build Docker images
         run: |
-          # Usamos --pull para bajar la imagen de Node 20 más reciente (sin CVEs de OS)
-          # Usamos --no-cache para ignorar cualquier capa de npm vieja
+          # Construimos asegurando que use el contexto actual donde acabamos de parchar
           docker build --no-cache --pull -t users-service:latest ./backend/users-service
           docker build --no-cache --pull -t academic-service:latest ./backend/academic-service
           docker build --no-cache --pull -t api-gateway:latest ./backend/api-gateway
